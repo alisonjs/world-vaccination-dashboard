@@ -20,6 +20,7 @@ import { DatasetManagerComponent } from './components/dataset-manager/dataset-ma
 import { DatasetManagerModule } from './components/dataset-manager/dataset-manager.module';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { PageNotFoundModule } from './components/page-not-found/page-not-found.module';
+import { ApiModule } from './components/api/api.module';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { PageNotFoundModule } from './components/page-not-found/page-not-found.m
     VaccinationWorldmapChartModule,
     LoginModule,
     DatasetManagerModule,
-    PageNotFoundModule
+    PageNotFoundModule,
+    ApiModule
   ],
   providers: [],
   bootstrap: [AppComponent]
