@@ -8,27 +8,12 @@ declare const Plotly;
 })
 export class DashboardComponent implements OnInit {
 
-  @ViewChild('daily', {static: false})
-  private daily: ElementRef;
+  @ViewChild('data-filter', {static:false})
+  private dataFilter:ElementRef;
 
   constructor() { }
 
   ngOnInit(): void {
     //buscar informações da base da API
   }
-  
-  ngAfterViewInit(){
-    this.plotGraph();
-  }
-
-  
-
-  plotGraph(){
-
-    Plotly.newPlot( 
-      this.daily.nativeElement, [{
-        x: [1, 2, 3, 4, 5],
-        y: [1, 2, 4, 8, 16] }], {
-          margin: { t: 0 } } );
-        }
 }
