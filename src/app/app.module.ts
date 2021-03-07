@@ -21,6 +21,8 @@ import { DatasetManagerModule } from './components/dataset-manager/dataset-manag
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { PageNotFoundModule } from './components/page-not-found/page-not-found.module';
 import { ApiModule } from './components/api/api.module';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { ApiModule } from './components/api/api.module';
     PageNotFoundComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     NgbModule,
@@ -46,7 +49,8 @@ import { ApiModule } from './components/api/api.module';
     LoginModule,
     DatasetManagerModule,
     PageNotFoundModule,
-    ApiModule
+    ApiModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

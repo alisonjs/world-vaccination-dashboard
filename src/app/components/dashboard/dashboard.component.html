@@ -1,26 +1,55 @@
-
 <div class="container bg-white border my-4">
 
   <div class="row my-4">
     <div class="col-sm-2">
       <h3> Filtros</h3>
     </div>
-    <div class="col-sm-10 col-md-6 col-lg-4">
-      <div class="row">
-        <label for="inputPassword" class="col-sm-2 col-form-label">Data</label>
-        <div class="col-sm-10 col-md-5">
-          <input type="text" class="form-control" placeholder="30/03/2020">
+    <div class="col-sm-10">
+      <form class="row">
+        <div class="col-md-6 col-sm-12">
+          <label>País</label>
+          <div class="input-group mb-3">
+            <select name="country" class="form-select" id="country" [(ngModel)]="model.country">
+              <option [selected]="true">Escolha um país</option>
+              <option *ngFor="let country of countries" [ngValue]="country">
+                {{country}}
+              </option>
+            </select>
+          </div>
         </div>
-      </div>
+
+        <div class="col-md-4 col-sm-12">
+          <div class="form-group">
+            <div class="input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" name="date" ngbDatepicker #d="ngbDatepicker" [(ngModel)]="model.date" required>
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
+                  <i class="bi bi-calendar3"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <button type="button" (click)="fetchData()" class="btn btn-primary">Filtrar <i class="bi bi-filter"></i></button>
+        </div>
+      </form>
     </div>
   </div>
-<hr/>
+  <hr />
   <div class="row my-4">
-    <div class="col-sm">
+    <div class="col-sm-12">
       <div class="row">
-        <h4 class="col-sm-4">Pais: {{country}}</h4>
-        <h4 class="col-sm-4">Total de vacinados: {{total_vaccination}}</h4>
-        <h4 class="col-sm-4">Percentual de vacinados: {{total_percent}}%</h4>
+        <div class="col-lg-3 col-sm-6">
+          <div class="row">
+            <div class="col-sm-10">
+              <h4>{{selected_country}}</h4>
+            </div>
+          </div>
+        </div>
+        <h4 class="col-lg-4 col-sm-6">Total de vacinados: {{total_vaccination}}</h4>
+        <h4 class="col-lg-5 col-sm-6">Percentual de vacinados: {{total_percent}}%</h4>
       </div>
       <div class="row my-4">
         <div class="col-sm-7">

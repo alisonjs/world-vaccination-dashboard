@@ -11,6 +11,6 @@ import { CommonModule } from '@angular/common';
 })
 export class ApiModule { 
 
-  public baseUrl = 'http://localhost:8080/api/v1';
+  public baseUrl = 'http://localhost:8080';
 
 }
