@@ -9,7 +9,7 @@
         <div class="col-md-6 col-sm-12">
           <label>País</label>
           <div class="input-group mb-3">
-            <select name="country" class="form-select" id="country" [(ngModel)]="model.country">
+            <select name="country" class="form-select" id="country" [(ngModel)]="model.country" (ngModelChange)="fetchDates($event)">
               <option [selected]="true">Escolha um país</option>
               <option *ngFor="let country of countries" [ngValue]="country">
                 {{country}}
@@ -21,7 +21,7 @@
         <div class="col-md-4 col-sm-12">
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control" placeholder="yyyy-mm-dd" name="date" ngbDatepicker #d="ngbDatepicker" [(ngModel)]="model.date" required>
+              <input class="form-control" placeholder="yyyy-mm-dd" name="date" ngbDatepicker [maxDate]="pickerDate.end_date" [minDate]="pickerDate.start_date" #d="ngbDatepicker" [(ngModel)]="model.date" required>
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
                   <i class="bi bi-calendar3"></i>
@@ -52,16 +52,16 @@
         <h4 class="col-lg-5 col-sm-6">Percentual de vacinados: {{total_percent}}%</h4>
       </div>
       <div class="row my-4">
-        <div class="col-sm-7">
-          <app-vaccination-daily-chart></app-vaccination-daily-chart>
+        <div class="col-sm-6">
+          <app-vaccination-daily-chart [country]="selected_country" [dailies]="daily_vaccinations"></app-vaccination-daily-chart>
         </div>
-        <div class="col-sm-5">
-          <app-vaccination-world-chart></app-vaccination-world-chart>
+        <div class="col-sm-6">
+          <app-vaccination-world-chart [total_top]="total_vaccinations_top"></app-vaccination-world-chart>
         </div>
       </div>
       <div class="row my-4">
         <div class="col-sm">
-          <app-vaccination-worldmap-chart></app-vaccination-worldmap-chart>
+          <app-vaccination-worldmap-chart [total]="total_vaccinations"></app-vaccination-worldmap-chart>
         </div>
       </div>
     </div>

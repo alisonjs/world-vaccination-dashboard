@@ -50,7 +50,7 @@ import { FormsModule } from '@angular/forms';
     DatasetManagerModule,
     PageNotFoundModule,
     ApiModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

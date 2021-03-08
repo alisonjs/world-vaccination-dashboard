@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { TotalInfo } from '../dashboard/dashboard.service';
 declare const Plotly;
 @Component({
   selector: 'app-vaccination-worldmap-chart',
@@ -8,6 +9,7 @@ declare const Plotly;
 export class VaccinationWorldmapChartComponent implements OnInit {
 
   constructor() { }
+  @Input() total: TotalInfo[] = []
 
   ngOnInit(): void {
   }
@@ -15,31 +17,25 @@ export class VaccinationWorldmapChartComponent implements OnInit {
   @ViewChild('world', { static: false })
   private world: ElementRef;
 
-  ngAfterViewInit(){
-    this.plotGraph()
+  ngOnChanges(){
+    if(typeof this.total !== 'undefined' && this.total.length){
+      this.plotGraph()
+    }
   }
 
   private plotGraph() {
-    Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2010_alcohol_consumption_by_country.csv', function (err, rows) {
-      function unpack(rows, key) {
-        return rows.map(function (row) { return row[key]; });
-      }
-
-      
-
-    });
-
+    let locations = this.total.map((item) => item.country)
     const data = [{
       type: 'choropleth',
       locationmode: 'country names',
-      locations: ['Brazil', 'Canada', 'China'],
-      z: [100, 200, 150],
-      text: ['Brasil', 'Canada', 'China'],
+      locations: locations,
+      z: this.total.map((item) => item.total_vaccinations),
+      text: locations,
       autocolorscale: true
     }];
 
     const layout = {
-      title: 'Pure alcohol consumption<br>among adults (age 15+) in 2010',
+      title: 'Total de vacinação no mundo',
       geo: {
         projection: {
           type: 'robinson'

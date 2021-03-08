@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { DailyInfo } from '../dashboard/dashboard.service';
 declare const Plotly;
 
 @Component({
@@ -9,36 +10,36 @@ declare const Plotly;
 export class VaccinationDailyChartComponent implements OnInit {
 
   constructor() { }
+  @Input() country: string;
+  @Input() dailies: DailyInfo[];
 
   ngOnInit(): void {
+    
   }
 
   @ViewChild('daily', {static: false})
   private daily: ElementRef;
 
-  ngAfterViewInit(){
-    this.plotGraph();
+  ngOnChanges(){
+    if(typeof this.dailies !== 'undefined' && this.dailies.length){
+      this.plotGraph()
+    }
   }
 
   private plotGraph(){
+    console.log("dailies:", this.dailies)
+    console.log("x:", this.dailies.map(item => item.date))
+    console.log("y:", this.dailies.map(item => item.daily_vaccinations))
     const trace1 = {
-      x: [1, 2, 3, 4],
-      y: [10, 15, 13, 17],
+      x: this.dailies.map(item => item.date),
+      y: this.dailies.map(item => item.daily_vaccinations ? item.daily_vaccinations : 0),
       type: 'scatter',
-      name: 'Brasil'
+      name: this.country
     };
-    
-    const trace2 = {
-      x: [1, 2, 3, 4],
-      y: [16, 5, 11, 9],
-      type: 'scatter',
-      name: 'Mundo',
-      mode: 'markers'
-    };
-    
-    const data = [trace1, trace2];
+
+    const data = [trace1];
     const layout = { 
-      title: 'Total de pessoas vacinadas no dia.',
+      title: 'Vacinação diária',
     };
     const config = {responsive: true}
     Plotly.newPlot(this.daily.nativeElement, data, layout, config)

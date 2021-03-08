@@ -6,7 +6,7 @@ export interface CountryInfo{
   country:string,
   total_vaccinations:number,
   total_vaccinations_per_hundred:number,
-  date:Date,
+  date:string,
   daily_vaccinations:number
 }
 
@@ -19,6 +19,10 @@ export interface DailyInfo{
   country:string,
   date:Date,
   daily_vaccinations:number
+}
+export interface DateInfo{
+  start_date:string,
+  end_date:string,
 }
 
 @Injectable({
@@ -36,15 +40,19 @@ export class DashboardService {
     return this.http.get<CountryInfo>(this.api.baseUrl + `/dataset/country?country=${country}&date=${date}`);
   }
 
-  getCountryDailyVaccinations(country:string, date:Date) : Observable<DailyInfo[]>{
-    return this.http.get<DailyInfo[]>(this.api.baseUrl + `/dataset/country/daily_vaccinations?country${country}&date=${date}`);
+  getCountryDailyVaccinations(country:string, date:string) : Observable<DailyInfo[]>{
+    return this.http.get<DailyInfo[]>(this.api.baseUrl + `/dataset/country/daily_vaccinations?country=${country}&date=${date}`);
   }
 
-  getTotalVaccinations(date:Date) : Observable<TotalInfo[]>{
+  getTotalVaccinations(date:string) : Observable<TotalInfo[]>{
     return this.http.get<TotalInfo[]>(this.api.baseUrl + `/dataset/countries/total_vaccinations?date=${date}`);
   }
 
-  getTotalVaccinationsTop(limit:number, date:Date) : Observable<TotalInfo[]>{
-    return this.http.get<TotalInfo[]>(this.api.baseUrl + `/dataset/countries/total_vaccinations?limit=${limit}date=${date}`);
+  getTotalVaccinationsTop(limit:number, date:string) : Observable<TotalInfo[]>{
+    return this.http.get<TotalInfo[]>(this.api.baseUrl + `/dataset/countries/total_vaccinations?limit=${limit}&date=${date}`);
+  }
+
+  getCountryDate(country:string) : Observable<DateInfo>{
+    return this.http.get<DateInfo>(this.api.baseUrl + `/dataset/country/dates/?country=${country}`);
   }
 }

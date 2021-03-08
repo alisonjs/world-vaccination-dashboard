@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
+import { TotalInfo } from '../dashboard/dashboard.service';
 declare const Plotly;
 @Component({
   selector: 'app-vaccination-world-chart',
@@ -9,35 +10,33 @@ export class VaccinationWorldChartComponent implements OnInit {
 
   constructor() { }
 
+  @Input() total_top:TotalInfo[];
+
   ngOnInit(): void {
   }
 
   @ViewChild('daily', {static: false})
   private daily: ElementRef;
 
-  ngAfterViewInit(){
-    this.plotGraph();
+  ngOnChanges(){
+    if(typeof this.total_top !== 'undefined' && this.total_top.length){
+      this.plotGraph();
+    }
   }
 
   private plotGraph(){
-    const trace1 = {
-      x: [1, 2, 3, 4],
-      y: [10, 15, 13, 17],
-      type: 'scatter',
-      name: 'Brasil'
+
+    var trace1 = {
+      x: this.total_top.map((item) => item.country),
+      y: this.total_top.map((item) => item.total_vaccinations),
+      name: 'Total de vacinação',
+      type: 'bar'
     };
     
-    const trace2 = {
-      x: [1, 2, 3, 4],
-      y: [16, 5, 11, 9],
-      type: 'scatter',
-      name: 'Mundo',
-      mode: 'markers'
-    };
     
-    const data = [trace1, trace2];
+    const data = [trace1];
     const layout = { 
-      title: 'Total de pessoas vacinadas no dia.',
+      title: 'Top 10',
     };
     const config = {responsive: true}
     Plotly.newPlot(this.daily.nativeElement, data, layout, config)

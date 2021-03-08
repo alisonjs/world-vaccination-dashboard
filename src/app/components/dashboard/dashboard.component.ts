@@ -1,13 +1,19 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { DashboardService, CountryInfo } from './dashboard.service';
-import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { DashboardService, CountryInfo, DailyInfo, DateInfo, TotalInfo } from './dashboard.service';
+import { NgbDateStruct, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
-class Filter{
+class Filter {
   constructor(
     public country: string,
     public date: NgbDateStruct,
-  ){}
+  ) { }
+}
+
+class PickerDate {
+  constructor(
+    public start_date: NgbDateStruct,
+    public end_date: NgbDateStruct,
+  ) { }
 }
 
 declare const Plotly;
@@ -17,43 +23,71 @@ declare const Plotly;
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  model = new Filter('Brazil', {year: 2021, month: 3, day: 4});
-  subscriber: Subscription;
+  pickerDate = new PickerDate({ year: 2021, month: 3, day: 4 }, { year: 2021, month: 4, day: 3 })
+  model = new Filter('Brazil', { year: 2021, month: 3, day: 4 });
   public selected_country: string = 'Brazil'
-  public date: string;
+  public selected_date: string = '2021-3-4';
   public total_vaccination: number = 0;
   public total_percent: number = 0.0;
   public countries: string[] = [];
+  public daily_vaccinations: DailyInfo[] = [];
+  public total_vaccinations: TotalInfo[] = [];
+  public total_vaccinations_top: TotalInfo[] = [];
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService, private formatter: NgbDateParserFormatter) { }
 
   ngOnInit(): void {
     this.fetchCountries();
-    this.fetchCountryInfo(this.model.country, this.model.date);
+    this.fetchData();
   }
 
-  public fetchData(){
-    this.subscriber.unsubscribe();
-    console.log(this.model.country, this.model.date)
+  public fetchData() {
     this.fetchCountryInfo(this.model.country, this.model.date);
+    this.fetchDailyVaccinations(this.model.country, this.model.date);
+    this.fetchTotalVaccinations(this.model.date);
+    this.fetchTotalVaccinationsTop(10,this.model.date);
   }
 
-  public fetchCountries(){
+  public fetchCountries() {
     this.dashboardService.getCountries().subscribe((data: string[]) => {
       this.countries = data;
     });
   }
 
-  public fetchCountryInfo(country:string, date:NgbDateStruct){
-    this.subscriber = this.dashboardService.getCountryInformation(country, this.formatDate(date)).subscribe((data: CountryInfo) => {
+  public fetchCountryInfo(country: string, date: NgbDateStruct) {
+    this.dashboardService.getCountryInformation(country, this.formatter.format(date)).subscribe((data: CountryInfo) => {
       this.selected_country = data.country;
+      let currDate = new Date(data.date)
+      this.selected_date = this.formatter.format({ year: currDate.getFullYear(), month: currDate.getMonth(), day: currDate.getDay() })
       this.total_vaccination = data.total_vaccinations;
       this.total_percent = data.total_vaccinations_per_hundred;
     })
   }
 
-  formatDate(date:NgbDateStruct):string{
-    return (date.year + "-" + date.month + "-" + date.day);
+  public fetchDailyVaccinations(country: string, date: NgbDateStruct) {
+    this.dashboardService.getCountryDailyVaccinations(country, this.formatter.format(date)).subscribe((data: DailyInfo[]) => {
+      this.daily_vaccinations = data;
+    });
+  }
+
+  public fetchTotalVaccinations(date: NgbDateStruct) {
+    this.dashboardService.getTotalVaccinations(this.formatter.format(date)).subscribe((data: TotalInfo[]) => {
+      this.total_vaccinations = data;
+    });
+  }
+
+  public fetchTotalVaccinationsTop(limit:number, date: NgbDateStruct) {
+    this.dashboardService.getTotalVaccinationsTop(limit, this.formatter.format(date)).subscribe((data: TotalInfo[]) => {
+      this.total_vaccinations_top = data;
+    });
+  }
+
+  public fetchDates(country: string) {
+    this.dashboardService.getCountryDate(country).subscribe((data: DateInfo) => {
+      this.pickerDate.start_date = this.formatter.parse(data.start_date);
+      this.pickerDate.end_date = this.formatter.parse(data.end_date);
+      this.model.date = this.formatter.parse(data.end_date);
+    });
   }
 
 }
