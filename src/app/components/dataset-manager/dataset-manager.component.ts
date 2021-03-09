@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 @Component({
   selector: 'app-dataset-manager',
   templateUrl: './dataset-manager.component.html',
@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatasetManagerComponent implements OnInit {
 
-  constructor() { }
+  currentUser: any;
+
+  constructor(private tokenStorage:TokenStorageService) { }
 
   ngOnInit(): void {
+    this.currentUser = this.tokenStorage.getUser();
   }
 
+  logout(): void {
+    this.tokenStorage.signOut();
+    window.location.reload();
+  }
 }

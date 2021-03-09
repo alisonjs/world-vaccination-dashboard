@@ -23,6 +23,7 @@ import { PageNotFoundModule } from './components/page-not-found/page-not-found.m
 import { ApiModule } from './components/api/api.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import {authInterceptorProviders} from './_helpers/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,7 @@ import { FormsModule } from '@angular/forms';
     ApiModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
