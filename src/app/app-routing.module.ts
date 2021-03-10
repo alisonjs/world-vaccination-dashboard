@@ -7,8 +7,9 @@ import { DatasetManagerComponent } from './components/dataset-manager/dataset-ma
 import { UserGuard } from './_guards/user.guard';
 
 const routes: Routes = [
+  
   { path: 'login', component: LoginComponent },
-  { path: 'dataset', component: DatasetManagerComponent, canActivate: [UserGuard] },
+  { path: 'dataset', component: DatasetManagerComponent/*, canActivate: [UserGuard]*/ },
   { path: '', component: DashboardComponent },
   { path: '**', component: PageNotFoundComponent }
 ];

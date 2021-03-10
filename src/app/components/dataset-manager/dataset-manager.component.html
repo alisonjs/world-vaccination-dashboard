@@ -1,1 +1,45 @@
-<p>dataset-manager works!</p>
+<app-header [title]="'Dashboard'" [is_hidden]="true" [is_hidden_logout]="false"></app-header>
+
+<div class="container my-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="row my-4">
+        <div class="col-8">
+          <input type="file" accept=".csv" (change)="selectFile($event)" />
+        </div>
+        <div class="col-4">
+          <button class="btn btn-primary btn-sm" [disabled]="!selectedFile" (click)="upload()">
+            Upload
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="currentFile" class="progress my-3">
+    <div
+      class="progress-bar progress-bar-info progress-bar-striped"
+      role="progressbar"
+      attr.aria-valuenow="{{ progress }}"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [ngStyle]="{ width: progress + '%' }"
+    >
+      {{ progress }}%
+    </div>
+  </div>
+
+  <div *ngIf="message" class="alert alert-secondary" role="alert">{{ message }}</div>
+
+  <div class="card my-4">
+    <div class="card-header">Last uploads</div>
+    <ul
+      class="list-group my-4 list-group-flush"
+      *ngFor="let file of fileInfos | async"
+    >
+      <li class="list-group-item">
+        <label>{{ file.name }}</label>
+      </li>
+    </ul>
+  </div>
+</div>

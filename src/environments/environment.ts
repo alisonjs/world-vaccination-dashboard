@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   api: {
-    baseUrl: 'https://world-vaccinations.herokuapp.com/'
+    baseUrl: 'http://localhost:8080/api/v1/'
   }
 };
 
