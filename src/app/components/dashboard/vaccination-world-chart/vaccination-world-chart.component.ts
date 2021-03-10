@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
-import { TotalInfo } from '../dashboard/dashboard.service';
+import { TotalInfo } from 'src/app/_services/dataset.service';
 declare const Plotly;
 @Component({
   selector: 'app-vaccination-world-chart',

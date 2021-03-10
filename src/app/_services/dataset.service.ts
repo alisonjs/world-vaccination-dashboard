@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ApiModule } from '../api/api.module';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+
+const API_URL = environment.api.baseUrl + 'dataset/'
+
 export interface CountryInfo {
   country: string,
   total_vaccinations: number,
@@ -25,34 +28,35 @@ export interface DateInfo {
   end_date: string,
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardService {
+export class DatasetService {
 
-  constructor(private api: ApiModule, private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   getCountries(): Observable<string[]> {
-    return this.http.get<string[]>(this.api.baseUrl + '/dataset/countries');
+    return this.http.get<string[]>(API_URL + 'countries');
   }
 
   getCountryInformation(country: string, date: string): Observable<CountryInfo> {
-    return this.http.get<CountryInfo>(this.api.baseUrl + `/dataset/country?country=${country}&date=${date}`);
+    return this.http.get<CountryInfo>(API_URL + `country?country=${country}&date=${date}`);
   }
 
   getCountryDailyVaccinations(country: string, date: string): Observable<DailyInfo[]> {
-    return this.http.get<DailyInfo[]>(this.api.baseUrl + `/dataset/country/daily_vaccinations?country=${country}&date=${date}`);
+    return this.http.get<DailyInfo[]>(API_URL + `country/daily_vaccinations?country=${country}&date=${date}`);
   }
 
   getTotalVaccinations(date: string): Observable<TotalInfo[]> {
-    return this.http.get<TotalInfo[]>(this.api.baseUrl + `/dataset/countries/total_vaccinations?date=${date}`);
+    return this.http.get<TotalInfo[]>(API_URL + `countries/total_vaccinations?date=${date}`);
   }
 
   getTotalVaccinationsTop(limit: number, date: string): Observable<TotalInfo[]> {
-    return this.http.get<TotalInfo[]>(this.api.baseUrl + `/dataset/countries/total_vaccinations?limit=${limit}&date=${date}`);
+    return this.http.get<TotalInfo[]>(API_URL + `countries/total_vaccinations?limit=${limit}&date=${date}`);
   }
 
   getCountryDate(country: string): Observable<DateInfo> {
-    return this.http.get<DateInfo>(this.api.baseUrl + `/dataset/country/dates/?country=${country}`);
+    return this.http.get<DateInfo>(API_URL + `country/dates/?country=${country}`);
   }
 }

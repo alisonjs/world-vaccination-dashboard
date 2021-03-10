@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardService, CountryInfo, DailyInfo, DateInfo, TotalInfo } from './dashboard.service';
+import { DatasetService, CountryInfo, DailyInfo, DateInfo, TotalInfo } from 'src/app/_services/dataset.service';
 import { NgbDateStruct, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 class Filter {
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
   public total_vaccinations: TotalInfo[] = [];
   public total_vaccinations_top: TotalInfo[] = [];
 
-  constructor(private dashboardService: DashboardService, private formatter: NgbDateParserFormatter) { }
+  constructor(private datasetService: DatasetService, private formatter: NgbDateParserFormatter) { }
 
   ngOnInit(): void {
     this.fetchCountries();
@@ -49,13 +49,13 @@ export class DashboardComponent implements OnInit {
   }
 
   public fetchCountries() {
-    this.dashboardService.getCountries().subscribe((data: string[]) => {
+    this.datasetService.getCountries().subscribe((data: string[]) => {
       this.countries = data;
     });
   }
 
   public fetchCountryInfo(country: string, date: NgbDateStruct) {
-    this.dashboardService.getCountryInformation(country, this.formatter.format(date)).subscribe((data: CountryInfo) => {
+    this.datasetService.getCountryInformation(country, this.formatter.format(date)).subscribe((data: CountryInfo) => {
       this.selected_country = data.country;
       let currDate = new Date(data.date)
       this.selected_date = this.formatter.format({ year: currDate.getFullYear(), month: currDate.getMonth(), day: currDate.getDay() })
@@ -65,25 +65,25 @@ export class DashboardComponent implements OnInit {
   }
 
   public fetchDailyVaccinations(country: string, date: NgbDateStruct) {
-    this.dashboardService.getCountryDailyVaccinations(country, this.formatter.format(date)).subscribe((data: DailyInfo[]) => {
+    this.datasetService.getCountryDailyVaccinations(country, this.formatter.format(date)).subscribe((data: DailyInfo[]) => {
       this.daily_vaccinations = data;
     });
   }
 
   public fetchTotalVaccinations(date: NgbDateStruct) {
-    this.dashboardService.getTotalVaccinations(this.formatter.format(date)).subscribe((data: TotalInfo[]) => {
+    this.datasetService.getTotalVaccinations(this.formatter.format(date)).subscribe((data: TotalInfo[]) => {
       this.total_vaccinations = data;
     });
   }
 
   public fetchTotalVaccinationsTop(limit:number, date: NgbDateStruct) {
-    this.dashboardService.getTotalVaccinationsTop(limit, this.formatter.format(date)).subscribe((data: TotalInfo[]) => {
+    this.datasetService.getTotalVaccinationsTop(limit, this.formatter.format(date)).subscribe((data: TotalInfo[]) => {
       this.total_vaccinations_top = data;
     });
   }
 
   public fetchDates(country: string) {
-    this.dashboardService.getCountryDate(country).subscribe((data: DateInfo) => {
+    this.datasetService.getCountryDate(country).subscribe((data: DateInfo) => {
       this.pickerDate.start_date = this.formatter.parse(data.start_date);
       this.pickerDate.end_date = this.formatter.parse(data.end_date);
       this.model.date = this.formatter.parse(data.end_date);

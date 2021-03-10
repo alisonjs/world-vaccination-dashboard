@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { DailyInfo } from '../dashboard/dashboard.service';
+import { DailyInfo } from 'src/app/_services/dataset.service';
 declare const Plotly;
 
 @Component({
