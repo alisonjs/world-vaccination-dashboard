@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'world-vaccinations.herokuapp.com/'
+  api: {
+    baseUrl: 'world-vaccinations.herokuapp.com/'
+  }
 };
