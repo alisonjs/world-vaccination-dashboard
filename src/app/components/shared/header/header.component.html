@@ -5,9 +5,9 @@
         <i class="bi bi-person"></i>
         Login
       </a>
-      <a (click)="logout" routerLinkActive="active" class="btn btn-danger" *ngIf="is_hidden_logout==false">
+      <button (click)="logout()" class="btn btn-danger" *ngIf="is_hidden_logout==false">
         <i class="bi bi-box-arrow-left"></i>
-        Login
-      </a>
+        Logout
+      </button>
   </div>
 </nav>

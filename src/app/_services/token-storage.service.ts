@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
 
+export interface User{
+  id:number
+  username:string,
+  email:string,
+  role:string
+}
+
 const TOKEN_KEY = 'access-token';
 const USER_KEY = 'auth-user';
 
@@ -28,12 +35,12 @@ export class TokenStorageService {
     window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
-  public getUser(): any {
+  public getUser(): User {
     const user = window.sessionStorage.getItem(USER_KEY);
     if (user) {
       return JSON.parse(user);
     }
 
-    return {};
+    return null;
   }
 }

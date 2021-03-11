@@ -18,7 +18,8 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  logout(): void {
+  public logout(): void {
+    console.log("Sair")
     this.tokenStorage.signOut();
     this.router.navigateByUrl("/login");
   }

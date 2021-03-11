@@ -3,6 +3,7 @@ import { FilesService } from 'src/app/_services/files.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-dataset-manager',
   templateUrl: './dataset-manager.component.html',
@@ -17,26 +18,27 @@ export class DatasetManagerComponent implements OnInit {
   message = '';
   fileInfos?: Observable<any>;
 
-  constructor(private tokenStorage:TokenStorageService, private filesService: FilesService) { }
+  constructor(private tokenStorage: TokenStorageService, private filesService: FilesService, private router: Router) { }
 
   ngOnInit(): void {
     this.currentUser = this.tokenStorage.getUser();
     this.fileInfos = this.filesService.getFiles();
+    this.currentUser = this.tokenStorage.getUser();
   }
 
   selectFile(event: any): void {
     this.selectedFile = event.target.file;
   }
-  
+
   upload(): void {
     this.progress = 0;
-  
+
     if (this.selectedFile) {
       const file: File | null = this.selectedFile;
-  
+
       if (file) {
         this.currentFile = file;
-  
+
         this.filesService.upload(this.currentFile).subscribe(
           (event: any) => {
             if (event.type === HttpEventType.UploadProgress) {
@@ -49,24 +51,18 @@ export class DatasetManagerComponent implements OnInit {
           (err: any) => {
             console.log(err);
             this.progress = 0;
-  
+
             if (err.error && err.error.message) {
               this.message = err.error.message;
             } else {
               this.message = 'Could not upload the file!';
             }
-  
+
             this.currentFile = undefined;
           });
       }
-  
+
       this.selectedFile = undefined;
     }
-  }
-  
-
-  logout(): void {
-    this.tokenStorage.signOut();
-    window.location.reload();
   }
 }

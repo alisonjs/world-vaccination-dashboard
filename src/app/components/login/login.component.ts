@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthenticatedUser, AuthService } from 'src/app/_services/auth.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 interface Alert {
@@ -32,12 +32,12 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService,
     private tokenStorage: TokenStorageService,
-    private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
+      this.navigate()
     }
   }
 
@@ -55,15 +55,15 @@ export class LoginComponent implements OnInit {
 
     if (this.alerts.length) return;
 
-    this.authService.login(this.model.username, this.model.password).subscribe((data: any) => {
+    this.authService.login(this.model.username, this.model.password).subscribe((data: AuthenticatedUser) => {
       this.tokenStorage.saveToken(data.token);
       this.tokenStorage.saveUser(data.user);
       this.isLoginFailed = false;
       this.isLoggedIn = true;
+      this.navigate();
     }, (error: any) => {
-      this.errorMessage = error.error.message;
       this.isLoginFailed = true;
-      this.alerts.push({ type: 'danger', message: this.errorMessage })
+      this.alerts.push({ type: 'danger', message: "Wrong username or password" })
     });
   }
 
@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
     this.alerts.splice(this.alerts.indexOf(alert), 1);
   }
 
-  reloadPage(): void {
-    window.location.reload();
+  private navigate(){
+    this.router.navigateByUrl("/dataset")
   }
 }
